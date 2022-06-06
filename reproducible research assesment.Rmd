@@ -6,79 +6,68 @@ output:
   word_document: default
   pdf_document: default
 ---
-# Reproducible Research: Peer Assessment 1
-```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-library(ggplot2)
-library(scales)
-install.packages("Hmisc")
-library(Hmisc)
-```
 ## Loading and preprocessing the data
 ### 1. Load the data (i.e. read.csv())
 ```{r, results='markup', warning=TRUE, message=TRUE}
-library(readr)
-activity = read_csv("C:/Users/bwabo/OneDrive/Desktop/Data Science/repdata_data_activity/activity.csv")
-View(activity)
-
+activity1=read.csv("C:/Users/bwabo/OneDrive/Desktop/Data Science/repdata_data_activity/activity.csv")
+```
 `##### 2. Process/transform the data (if necessary) into a format suitable for your analysis
 ```{r}
-#activity$interval = strptime(gsub("([0-9]{1,2})([0-9]{2})", "\\1:\\2", activity$interval), format='%H:%M')
+#activity1$interval = strptime(gsub("([0-9]{1,2})([0-9]{2})", "\\1:\\2", activity1$interval), format='%H:%M')
 ```
 ## What is mean total number of steps taken per day?
 ```{r}
-stepsByDay = tapply(activity$steps, activity$date, sum, na.rm=TRUE)
+stepsByDay1 = tapply(activity1$steps, activity1$date, sum, na.rm=TRUE)
 ```
 ##### 1. Make a histogram of the total number of steps taken each day
 ```{r}
-qplot(stepsByDay, xlab='Total steps per day', ylab='Frequency using binwith 500', binwidth=500)
+qplot(stepsByDay1, xlab='Total steps per day', ylab='Frequency using binwith 500', binwidth=500)
 ```
 ##### 2. To calculate and report the mean and median total number of steps taken per day
 ```{r}
-stepsByDayMean = mean(stepsByDay)
-stepsByDayMedian = median(stepsByDay)
+stepsByDay1Mean = mean(stepsByDay1)
+stepsByDay1Median = median(stepsByDay1)
 ```
-* Mean: `r stepsByDayMean`
-* Median:  `r stepsByDayMedian`
 
 -----
 ## What is the average daily activity pattern?
 ```{r}
-averageStepsPerTimeBlock = aggregate(x=list(meanSteps=activity$steps), by=list(interval=activity$interval), FUN=mean, na.rm=TRUE)
+averageStepsPerTimeBlock1 = aggregate(x=list(meanSteps=activity1$steps), by=list(interval=activity1$interval), FUN=mean, na.rm=TRUE)
 ```
 ##### 1. Making a time series plot
 ```{r}
-ggplot(data=averageStepsPerTimeBlock, aes(x=interval, y=meanSteps)) +
+ggplot(data=averageStepsPerTimeBlock1, aes(x=interval, y=meanSteps)) +
     geom_line() +
     xlab("5-minute interval") +
     ylab("average number of steps taken") 
 ```
 ##### 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 ```{r}
-mostSteps = which.max(averageStepsPerTimeBlock$meanSteps)
-timeMostSteps =  gsub("([0-9]{1,2})([0-9]{2})", "\\1:\\2", averageStepsPerTimeBlock[mostSteps,'interval'])
+mostSteps1 = which.max(averageStepsPerTimeBlock1$meanSteps)
+timeMostSteps =  gsub("([0-9]{1,2})([0-9]{2})", "\\1:\\2", averageStepsPerTimeBlock1[mostSteps,'interval'])
 ```
 * Most Steps at: `r timeMostSteps`
 ----
 ## Imputing missing values from the activity data set
 ##### 1. Calculate and report the total number of missing values in the data set 
 ```{r}
-numMissingValues = length(which(is.na(activity$steps)))
+numMissingValues1 = length(which(is.na(activity1$steps)))
 ```
 ##### 2. Numerous strategy to handle the missing values in the activity dataset.
 ##### 3. Creating new dataset that is equal to the original dataset but with the missing data filled in.
 ```{r}
-activityImputed = activity
-activityImputed$steps = impute(activity$steps, fun=mean)
+activity1Imputed = activity1
+activity1Imputed$steps = impute(activity1$steps, fun=mean)
 ```
 ##### 4. Making an histogram of the total number of steps taken each day 
 ```{r}
-stepsByDayImputed = tapply(activityImputed$steps, activityImputed$date, sum)
-qplot(stepsByDayImputed, xlab='Total steps per day (Imputed)', ylab='Frequency using binwith 500', binwidth=500)
+stepsByDayImputed1 = tapply(activity1Imputed$steps, activity1Imputed$date, sum)
+qplot(stepsByDayImputed1, xlab='Total steps per day (Imputed)', ylab='Frequency using binwith 500', binwidth=500)
 ```
 ##### ... as well as Calculating and reporting the mean and median total number of steps taken per day. 
 ```{r}
-stepsByDayMeanImputed = mean(stepsByDayImputed)
-stepsByDayMedianImputed = median(stepsByDayImputed)
+stepsByDayMeanImputed1 = mean(stepsByDayImputed1)
+stepsByDayMedianImputed1 = median(stepsByDayImputed1)
 ```
 * Mean (Imputed): `r stepsByDayMeanImputed`
 * Median (Imputed):  `r stepsByDayMedianImputed`
@@ -86,14 +75,14 @@ stepsByDayMedianImputed = median(stepsByDayImputed)
 ##### 1. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
 
 ```{r}
-activityImputed$dateType <-  ifelse(as.POSIXlt(activityImputed$date)$wday %in% c(0,6), 'weekend', 'weekday')
+activity1Imputed$dateType =  ifelse(as.POSIXlt(activity1Imputed$date)$wday %in% c(0,6), 'weekend', 'weekday')
 ```
 ##### 2. Producing panel plot that containing a time series 
 
 ```{r}
-averagedActivityImputed = aggregate(steps ~ interval + date
+averagedActivity1Imputed = aggregate(steps ~ interval + date
                         ,data=activityDataImputed, mean)
-ggplot(averagedActivityImputed, aes(interval, steps)) + 
+ggplot(averagedActivity1Imputed, aes(interval, steps)) + 
     geom_line() + 
     facet_grid(date ~ .) +
     xlab("5-minute interval") + 
