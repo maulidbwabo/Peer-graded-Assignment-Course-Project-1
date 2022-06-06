@@ -21,7 +21,7 @@ stepsByDay1 = tapply(activity1$steps, activity1$date, sum, na.rm=TRUE)
 ```
 ##### 1. Make a histogram of the total number of steps taken each day
 ```{r}
-qplot(stepsByDay1, xlab='Total steps per day', ylab='Frequency using binwith 500', binwidth=500)
+ggplot2::qplot(stepsByDay1, xlab='Total steps per day', ylab='Frequency using binwith 500', binwidth=500)
 ```
 ##### 2. To calculate and report the mean and median total number of steps taken per day
 ```{r}
@@ -36,7 +36,7 @@ averageStepsPerTimeBlock1 = aggregate(x=list(meanSteps=activity1$steps), by=list
 ```
 ##### 1. Making a time series plot
 ```{r}
-ggplot(data=averageStepsPerTimeBlock1, aes(x=interval, y=meanSteps)) +
+ggplot2::ggplot(data=averageStepsPerTimeBlock1, aes(x=interval, y=meanSteps)) +
     geom_line() +
     xlab("5-minute interval") +
     ylab("average number of steps taken") 
